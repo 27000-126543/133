@@ -25,6 +25,8 @@ query_engine = get_query_engine()
 @router.get("/")
 async def get_certificates(
     employee_id: Optional[int] = None,
+    employee_name: Optional[str] = None,
+    employee_no: Optional[str] = None,
     cert_type_id: Optional[int] = None,
     status: Optional[str] = None,
     start_date: Optional[date] = None,
@@ -37,33 +39,25 @@ async def get_certificates(
     current_user: User = Depends(get_current_active_user)
 ):
     """获取证书列表"""
-    filters = {}
-    
     if employee_id:
         if current_user.role == UserRole.EMPLOYEE.value and current_user.employee_id != employee_id:
             raise HTTPException(status_code=403, detail="只能查看自己的证书")
-        filters["employee_ids"] = [employee_id]
-    elif current_user.role == UserRole.EMPLOYEE.value:
-        filters["employee_ids"] = [current_user.employee_id]
     
-    if cert_type_id:
-        filters["cert_type_ids"] = [cert_type_id]
-    if status:
-        filters["status"] = status
-    if start_date and end_date:
-        filters["start_date"] = start_date
-        filters["end_date"] = end_date
+    result = query_engine.advanced_query(
+        employee_name=employee_name,
+        employee_no=employee_no,
+        cert_type_id=cert_type_id,
+        status=status,
+        start_date=start_date,
+        end_date=end_date,
+        only_expiring=only_expiring,
+        only_expired=only_expired,
+        only_unverified=only_unverified
+    )
     
-    result = query_engine.advanced_query(**filters)
-    
-    if only_expiring:
-        result = [c for c in result if c["days_to_expiry"] is not None 
-                  and 0 < c["days_to_expiry"] <= Config.EXPIRY_WARNING_DAYS]
-    elif only_expired:
-        result = [c for c in result if c.get("is_expired", False)]
-    
-    if only_unverified:
-        result = [c for c in result if not c.get("verified", False)]
+    if employee_id or current_user.role == UserRole.EMPLOYEE.value:
+        target_emp_id = employee_id if employee_id else current_user.employee_id
+        result = [c for c in result if c.get("employee_id") == target_emp_id]
     
     total = len(result)
     paginated = result[skip:skip + limit]

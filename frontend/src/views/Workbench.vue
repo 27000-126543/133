@@ -170,6 +170,17 @@
     
     <el-dialog v-model="showUploadDialog" title="上传证书" width="600px" @close="resetUploadForm">
       <el-form :model="uploadForm" label-width="100px">
+        <el-form-item label="证书类型" required>
+          <el-select v-model="uploadForm.cert_type_id" placeholder="请选择证书类型" filterable style="width: 100%;">
+            <el-option
+              v-for="type in certTypes"
+              :key="type.id"
+              :label="type.name"
+              :value="type.id"
+            />
+          </el-select>
+        </el-form-item>
+        
         <el-form-item label="证书图片">
           <el-upload
             ref="uploadRef"
@@ -279,7 +290,7 @@ import {
 import { useUserStore } from '@/stores/user'
 import { getEmployee, getEmployeeCompliance } from '@/api/common'
 import { getTasks, completeTask } from '@/api/task'
-import { getCertificates, ocrPreview as ocrPreviewApi, uploadCertificate, getCertificateImage } from '@/api/certificate'
+import { getCertificates, ocrPreview as ocrPreviewApi, uploadCertificate, getCertificateImage, getCertificateTypes } from '@/api/certificate'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -289,11 +300,13 @@ const employeeInfo = ref(null)
 const employeeCompliance = ref(null)
 const myTasks = ref([])
 const myCertificates = ref([])
+const certTypes = ref([])
 
 const showUploadDialog = ref(false)
 const uploadRef = ref(null)
 const uploadFile = ref(null)
 const uploadForm = reactive({
+  cert_type_id: null,
   manual_cert_name: '',
   manual_cert_number: '',
   manual_issuing_authority: '',
@@ -356,6 +369,14 @@ async function fetchMyCertificates() {
   }
 }
 
+async function fetchCertTypes() {
+  try {
+    certTypes.value = await getCertificateTypes()
+  } catch (error) {
+    console.error('Failed to fetch cert types:', error)
+  }
+}
+
 function handleFileChange(file) {
   uploadFile.value = file.raw
 }
@@ -392,8 +413,8 @@ async function handleOCRPreview() {
 }
 
 async function handleUploadSubmit() {
-  if (!uploadFile.value) {
-    ElMessage.warning('请选择文件')
+  if (!uploadFile.value || !uploadForm.cert_type_id) {
+    ElMessage.warning('请填写完整信息')
     return
   }
   
@@ -402,6 +423,7 @@ async function handleUploadSubmit() {
     const formData = new FormData()
     formData.append('file', uploadFile.value)
     formData.append('employee_id', userStore.user.employee_id)
+    formData.append('cert_type_id', uploadForm.cert_type_id)
     
     if (!ocrPreview.value?.cert_name && uploadForm.manual_cert_name) {
       formData.append('manual_cert_name', uploadForm.manual_cert_name)
@@ -439,6 +461,7 @@ function resetUploadForm() {
   uploadFile.value = null
   ocrPreview.value = null
   Object.assign(uploadForm, {
+    cert_type_id: null,
     manual_cert_name: '',
     manual_cert_number: '',
     manual_issuing_authority: '',
@@ -526,6 +549,7 @@ onMounted(() => {
   fetchEmployeeInfo()
   fetchMyTasks()
   fetchMyCertificates()
+  fetchCertTypes()
 })
 </script>
 

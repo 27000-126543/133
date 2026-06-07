@@ -139,6 +139,17 @@
           </el-select>
         </el-form-item>
         
+        <el-form-item label="证书类型" required>
+          <el-select v-model="uploadForm.cert_type_id" placeholder="请选择证书类型" filterable style="width: 100%;">
+            <el-option
+              v-for="type in certTypes"
+              :key="type.id"
+              :label="type.name"
+              :value="type.id"
+            />
+          </el-select>
+        </el-form-item>
+        
         <el-form-item label="证书图片" required>
           <el-upload
             ref="uploadRef"
@@ -253,6 +264,7 @@ const uploadRef = ref(null)
 const uploadFile = ref(null)
 const uploadForm = reactive({
   employee_id: null,
+  cert_type_id: null,
 })
 const ocrPreview = ref(null)
 const ocrLoading = ref(false)
@@ -371,7 +383,7 @@ async function handleOCRPreview() {
 }
 
 async function handleUploadSubmit() {
-  if (!uploadFile.value || !uploadForm.employee_id) {
+  if (!uploadFile.value || !uploadForm.employee_id || !uploadForm.cert_type_id) {
     ElMessage.warning('请填写完整信息')
     return
   }
@@ -381,6 +393,25 @@ async function handleUploadSubmit() {
     const formData = new FormData()
     formData.append('file', uploadFile.value)
     formData.append('employee_id', uploadForm.employee_id)
+    formData.append('cert_type_id', uploadForm.cert_type_id)
+    
+    if (ocrPreview.value) {
+      if (ocrPreview.value.cert_name) {
+        formData.append('manual_cert_name', ocrPreview.value.cert_name)
+      }
+      if (ocrPreview.value.cert_number) {
+        formData.append('manual_cert_number', ocrPreview.value.cert_number)
+      }
+      if (ocrPreview.value.issuing_authority) {
+        formData.append('manual_issuing_authority', ocrPreview.value.issuing_authority)
+      }
+      if (ocrPreview.value.issue_date) {
+        formData.append('manual_issue_date', ocrPreview.value.issue_date)
+      }
+      if (ocrPreview.value.expiry_date) {
+        formData.append('manual_expiry_date', ocrPreview.value.expiry_date)
+      }
+    }
     
     const result = await uploadCertificate(formData)
     
@@ -402,6 +433,7 @@ function resetUploadForm() {
   uploadFile.value = null
   ocrPreview.value = null
   uploadForm.employee_id = null
+  uploadForm.cert_type_id = null
   if (uploadRef.value) {
     uploadRef.value.clearFiles()
   }
