@@ -1,0 +1,8 @@
+﻿id,employee_id,employee_name,employee_no,department_name,cert_type_id,cert_type_name,cert_name,cert_number,issuing_authority,issue_date,expiry_date,score,status,verified,source,is_valid,is_expired,days_to_expiry,created_at
+7,7,周九,E007,安全部,2,安全生产考核合格证书,安全员A证,京建安A2024008888,北京市住房和城乡建设委员会,2024-02-20,2027-02-19,,valid,True,test_import,True,False,257.0,2026-06-07T13:08:53.448837
+6,6,孙八,E006,技术部,1,注册建造师执业资格证书,一级建造师,JZS2024009999,住房和城乡建设部,2024-01-15,2027-01-14,,valid,True,test_import,True,False,221.0,2026-06-07T13:08:53.447311
+5,5,钱七,E005,技术部,5,PMP项目管理专业人士资格证书,PMP项目管理专业人士资格证书,PMP-2023-001234,Project Management Institute,2023-08-15,2025-06-07,,expired,True,demo,False,True,-365.0,2026-06-07T13:08:52.954861
+4,4,赵六,E004,财务部,4,会计专业技术资格证书,中级会计专业技术资格证书,KJ2023001122,财政部、人力资源社会保障部,2023-11-05,,85.0,valid,True,demo,True,False,,2026-06-07T13:08:52.954860
+2,2,李四,E002,安全部,2,安全生产考核合格证书,安全生产考核合格证书(B类),京建安B2023000567,北京市住房和城乡建设委员会,2023-06-20,2027-06-07,,valid,True,demo,True,False,365.0,2026-06-07T13:08:52.954859
+3,3,王五,E003,工程部,3,工程师职称证书,工程师职称证书,GCS2022000890,北京市人力资源和社会保障局,2022-10-25,,,valid,True,demo,True,False,,2026-06-07T13:08:52.954859
+1,1,张三,E001,技术部,1,注册建造师执业资格证书,一级注册建造师执业资格证书,JZS2023001234,中华人民共和国住房和城乡建设部,2023-03-15,2027-06-07,,valid,True,demo,True,False,365.0,2026-06-07T13:08:52.954857
