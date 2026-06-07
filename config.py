@@ -26,6 +26,8 @@ class Config:
     LOG_DIR = os.path.join(BASE_DIR, "logs")
     DATA_DIR = os.path.join(BASE_DIR, "data")
     
+    MAX_UPLOAD_SIZE = int(os.getenv("MAX_UPLOAD_SIZE", 10 * 1024 * 1024))  # 10MB
+    
     MAX_CONCURRENT_TASKS = int(os.getenv("MAX_CONCURRENT_TASKS", 10))
     BATCH_SIZE = int(os.getenv("BATCH_SIZE", 100))
     RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", 60))
