@@ -45,6 +45,9 @@ class OCREngine:
             print(f"Warning: OCR engine not available: {e}")
             self._ocr_instance = None
     
+    def is_available(self) -> bool:
+        return self._ocr_instance is not None
+    
     def extract_text(self, image_path: str) -> str:
         if not os.path.exists(image_path):
             raise FileNotFoundError(f"Image file not found: {image_path}")
