@@ -221,7 +221,7 @@ import {
 import { useUserStore } from '@/stores/user'
 import {
   getCertificates, getCertificateTypes, verifyCertificate,
-  uploadCertificate, ocrPreview, getCertificateImage, exportCertificates
+  uploadCertificate, ocrPreview as ocrPreviewApi, getCertificateImage, exportCertificates
 } from '@/api/certificate'
 import { getEmployees } from '@/api/common'
 import download from 'downloadjs'
@@ -361,7 +361,7 @@ async function handleOCRPreview() {
     ocrLoading.value = true
     const formData = new FormData()
     formData.append('file', uploadFile.value)
-    ocrPreview.value = await ocrPreview(formData)
+    ocrPreview.value = await ocrPreviewApi(formData)
   } catch (error) {
     console.error('OCR preview failed:', error)
     ocrPreview.value = { confidence: 0 }

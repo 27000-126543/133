@@ -8,7 +8,7 @@
       </div>
       
       <el-form
-        ref="loginForm"
+        ref="loginFormRef"
         :model="loginForm"
         :rules="loginRules"
         class="login-form"
@@ -75,14 +75,14 @@ const loginRules = {
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 }
 
-const loginForm = ref(null)
+const loginFormRef = ref(null)
 const loading = ref(false)
 
 async function handleLogin() {
-  if (!loginForm.value) return
+  if (!loginFormRef.value) return
   
   try {
-    await loginForm.value.validate()
+    await loginFormRef.value.validate()
     loading.value = true
     
     await userStore.loginUser(loginForm)

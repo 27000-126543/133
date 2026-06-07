@@ -279,7 +279,7 @@ import {
 import { useUserStore } from '@/stores/user'
 import { getEmployee, getEmployeeCompliance } from '@/api/common'
 import { getTasks, completeTask } from '@/api/task'
-import { getCertificates, ocrPreview, uploadCertificate, getCertificateImage } from '@/api/certificate'
+import { getCertificates, ocrPreview as ocrPreviewApi, uploadCertificate, getCertificateImage } from '@/api/certificate'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -370,7 +370,7 @@ async function handleOCRPreview() {
     ocrLoading.value = true
     const formData = new FormData()
     formData.append('file', uploadFile.value)
-    ocrPreview.value = await ocrPreview(formData)
+    ocrPreview.value = await ocrPreviewApi(formData)
     
     if (ocrPreview.value.confidence >= 0.7) {
       ElMessage.success('识别成功，请核对信息')

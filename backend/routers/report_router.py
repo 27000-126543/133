@@ -9,6 +9,7 @@ from audit_logger import get_audit_logger
 from report_generator import get_report_generator
 from training_engine import get_training_engine
 from query_engine import get_query_engine
+from database import get_db_session
 from config import Config
 
 router = APIRouter(prefix="", tags=["报告与统计"])

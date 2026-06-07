@@ -111,7 +111,8 @@ import {
   TitleComponent, TooltipComponent, LegendComponent, GridComponent
 } from 'echarts/components'
 import VChart from 'vue-echarts'
-import { getDashboardStats, runDailyCheck as apiRunDailyCheck } from '@/api/common'
+import { getDashboardStats } from '@/api/common'
+import { runDailyCheck as apiRunDailyCheck } from '@/api/task'
 
 use([
   CanvasRenderer,
